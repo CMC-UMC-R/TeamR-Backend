@@ -26,4 +26,6 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
     List<Mission> findByUser_DeviceIdAndDayOfWeek(@Param("deviceId") String deviceId, @Param("dayOfWeek") DayOfWeekType dayOfWeek);
 
     Optional<Mission> findByUser_DeviceIdAndMissionCategory(String deviceId, MissionCategory missionCategory);
+
+    long deleteByUser(User user);
 }
