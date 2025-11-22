@@ -19,8 +19,8 @@ public class CharacterService {
     private final CharacterRepository characterRepository;
     private final UserRepository userRepository;
 
-    @Value("${app.base-url}")
-    private String baseUrl;
+    @Value("${app.server-url}")
+    private String serverUrl;
 
     /**
      * 내 캐릭터 정보 조회
@@ -35,7 +35,7 @@ public class CharacterService {
                 .orElseGet(() -> characterRepository.save(new Character(user)));
 
         CharacterLevel levelEnum = CharacterLevel.fromLevel(character.getLevel());
-        String fullImageUrl = baseUrl + levelEnum.getImagePath();
+        String fullImageUrl = serverUrl + levelEnum.getImagePath();
 
         return CharacterResponse.builder()
                 .level(character.getLevel())
