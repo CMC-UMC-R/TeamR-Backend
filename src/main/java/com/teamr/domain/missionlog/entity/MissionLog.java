@@ -41,3 +41,4 @@ public class MissionLog extends BaseEntity {
         return new MissionLog(missionStatus, missionDate, mission);
     }
 }
+
