@@ -23,4 +23,12 @@ public class MovementMission extends BaseEntity {
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
+    private MovementMission(Integer count, Mission mission) {
+        this.count = count;
+        this.mission = mission;
+    }
+
+    public static MovementMission of(Integer count, Mission mission) {
+        return new MovementMission(count, mission);
+    }
 }

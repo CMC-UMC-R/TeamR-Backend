@@ -17,10 +17,18 @@ public class PictureMission extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String imageUrl;
+    private String word;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
 
+    private PictureMission(String word, Mission mission) {
+        this.word = word;
+        this.mission = mission;
+    }
+
+    public static PictureMission of(String word, Mission mission) {
+        return new PictureMission(word, mission);
+    }
 }
