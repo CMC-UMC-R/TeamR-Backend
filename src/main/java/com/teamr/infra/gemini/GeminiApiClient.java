@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class GeminiApiClient {
 
-    private static final String FLASH_MODEL = "gemini-2.0-flash-exp";
+    private static final String FLASH_MODEL = "gemini-2.5-flash";
 
     private final RestClient geminiRestClient;
 

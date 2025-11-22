@@ -1,5 +1,6 @@
 package com.teamr.infra.gemini.controller;
 
+import com.teamr.global.common.MissionCategory;
 import com.teamr.infra.gemini.dto.MissionVerificationResponse;
 import com.teamr.infra.gemini.dto.WordGenerationRequest;
 import com.teamr.infra.gemini.dto.WordGenerationResponse;
@@ -20,14 +21,16 @@ public class GeminiController implements GeminiSwagger {
     private final GeminiService geminiService;
 
     @Override
-    public ResponseEntity<WordGenerationResponse> generateWord(String category) {
+    public ResponseEntity<WordGenerationResponse> generateWord(MissionCategory category) {
         WordGenerationRequest request = WordGenerationRequest.of(category);
         WordGenerationResponse response = geminiService.generateWord(request);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<WordGenerationResponse> regenerateWord(String category, List<String> existingWords) {
+    public ResponseEntity<WordGenerationResponse> regenerateWord(
+            MissionCategory category,
+            List<String> existingWords) {
         WordGenerationRequest request = WordGenerationRequest.ofWithExisting(category, existingWords);
         WordGenerationResponse response = geminiService.generateWord(request);
         return ResponseEntity.ok(response);
@@ -39,3 +42,4 @@ public class GeminiController implements GeminiSwagger {
         return ResponseEntity.ok(response);
     }
 }
+
