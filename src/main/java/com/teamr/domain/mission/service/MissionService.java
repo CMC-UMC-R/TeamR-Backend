@@ -30,6 +30,8 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.teamr.global.common.DayOfWeekConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -296,7 +298,7 @@ public class MissionService {
         LocalDate currentDate = startOfWeek;
 
         while (!currentDate.isAfter(endOfWeek)) {
-            DayOfWeekType dayOfWeek = convertJavaDayOfWeekToCustom(currentDate.getDayOfWeek());
+            DayOfWeekType dayOfWeek = DayOfWeekConverter.toDayOfWeek(currentDate.getDayOfWeek());
             Boolean isCompleted = calculateDailyCompletionStatus(currentDate, today, logsByDate);
 
             dailyStatuses.add(DailyMissionStatus.builder()
@@ -326,21 +328,6 @@ public class MissionService {
         }
 
         return missionLogService.isCompletedForDate(targetDate, logsByDate);
-    }
-
-    /**
-     * java.time.DayOfWeek를 커스텀 DayOfWeek enum으로 변환
-     */
-    private DayOfWeekType convertJavaDayOfWeekToCustom(DayOfWeek javaDayOfWeek) {
-        return switch (javaDayOfWeek) {
-            case MONDAY -> DayOfWeekType.MONDAY;
-            case TUESDAY -> DayOfWeekType.TUESDAY;
-            case WEDNESDAY -> DayOfWeekType.WEDNESDAY;
-            case THURSDAY -> DayOfWeekType.THURSDAY;
-            case FRIDAY -> DayOfWeekType.FRIDAY;
-            case SATURDAY -> DayOfWeekType.SATURDAY;
-            case SUNDAY -> DayOfWeekType.SUNDAY;
-        };
     }
 }
 

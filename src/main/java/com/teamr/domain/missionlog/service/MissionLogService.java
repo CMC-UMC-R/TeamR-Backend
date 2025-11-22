@@ -8,6 +8,7 @@ import com.teamr.domain.missionlog.dto.response.TodayMissionRes;
 import com.teamr.domain.missionlog.entity.MissionLog;
 import com.teamr.domain.missionlog.enums.MissionStatus;
 import com.teamr.domain.missionlog.repository.MissionLogRepository;
+import com.teamr.global.common.DayOfWeekConverter;
 import com.teamr.global.exception.BusinessException;
 import com.teamr.global.exception.ErrorCode;
 import java.time.DayOfWeek;
@@ -80,7 +81,7 @@ public class MissionLogService {
         // 오늘 요일의 미션들을 카테고리별로 맵핑
         DayOfWeek javaDayOfWeek = today.getDayOfWeek();
         Map<MissionCategory, Mission> missionsByCategory = missionRepository
-                .findByUser_DeviceIdAndDayOfWeek(deviceId, convertToDayOfWeekType(javaDayOfWeek))
+                .findByUser_DeviceIdAndDayOfWeek(deviceId, DayOfWeekConverter.toDayOfWeek(javaDayOfWeek))
                 .stream()
                 .collect(Collectors.toMap(Mission::getMissionCategory, mission -> mission));
 
@@ -132,21 +133,6 @@ public class MissionLogService {
 
         // 미션 시간이 지났지만 10분 이내면 PENDING (아직 수행 가능)
         return MissionStatus.PENDING;
-    }
-
-    /**
-     * java.time.DayOfWeek를 DayOfWeekType으로 변환
-     */
-    private DayOfWeekType convertToDayOfWeekType(java.time.DayOfWeek javaDayOfWeek) {
-        return switch (javaDayOfWeek) {
-            case MONDAY -> com.teamr.domain.mission.enums.DayOfWeekType.MONDAY;
-            case TUESDAY -> com.teamr.domain.mission.enums.DayOfWeekType.TUESDAY;
-            case WEDNESDAY -> com.teamr.domain.mission.enums.DayOfWeekType.WEDNESDAY;
-            case THURSDAY -> com.teamr.domain.mission.enums.DayOfWeekType.THURSDAY;
-            case FRIDAY -> com.teamr.domain.mission.enums.DayOfWeekType.FRIDAY;
-            case SATURDAY -> com.teamr.domain.mission.enums.DayOfWeekType.SATURDAY;
-            case SUNDAY -> com.teamr.domain.mission.enums.DayOfWeekType.SUNDAY;
-        };
     }
 
     @Transactional
