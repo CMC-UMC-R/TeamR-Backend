@@ -62,7 +62,7 @@ public interface MissionSwagger {
      */
     @Operation(
             summary = "요일별 미션 조회",
-            description = "사용자 ID와 요일을 기준으로 미션 시간, 종류, 카테고리를 조회합니다."
+            description = "디바이스 ID와 요일을 기준으로 미션 시간, 종류, 카테고리를 조회합니다."
     )
     @ApiResponses({
             @ApiResponse(
@@ -75,10 +75,14 @@ public interface MissionSwagger {
     })
     @GetMapping("/{dayOfWeek}")
     ResponseEntity<MissionRes> getMissionByDay(
-            @Parameter(description = "사용자 ID", required = true, example = "1")
-            @RequestParam Long userId,
-            @Parameter(description = "요일", required = true, example = "MONDAY")
-            @RequestParam DayOfWeek dayOfWeek
+            @Parameter(
+                    description = "기기 고유 식별자 (UUID)",
+                    required = true,
+                    example = "550e8400-e29b-41d4-a716-446655440000"
+            )
+            @RequestHeader("X-Device-Id") String deviceId,
+            @Parameter(description = "요일 (MONDAY ~ SUNDAY)", required = true, example = "MONDAY")
+            @PathVariable DayOfWeek dayOfWeek
     );
 
     @Operation(

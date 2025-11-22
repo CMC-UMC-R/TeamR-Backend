@@ -24,8 +24,8 @@ public class MissionController implements MissionSwagger {
     }
 
     @Override
-    public ResponseEntity<MissionRes> getMissionByDay(Long userId, DayOfWeek dayOfWeek) {
-        MissionRes response = missionService.getMissionByDay(userId, dayOfWeek);
+    public ResponseEntity<MissionRes> getMissionByDay(String deviceId, DayOfWeek dayOfWeek) {
+        MissionRes response = missionService.getMissionByDay(deviceId, dayOfWeek);
         return ResponseEntity.ok(response);
     }
 

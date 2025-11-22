@@ -113,8 +113,12 @@ public class MissionService {
     }
     // 요일별 미션 시간, 종류, 카테고리 조회
     @Transactional(readOnly = true)
-    public MissionRes getMissionByDay(Long userId, DayOfWeek dayOfWeek) {
-        Mission mission = missionRepository.findByUserIdAndDayOfWeek(userId, dayOfWeek)
+    public MissionRes getMissionByDay(String deviceId, DayOfWeek dayOfWeek) {
+        // 유저 조회
+        User user = userRepository.findByDeviceId(deviceId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Mission mission = missionRepository.findByUserIdAndDayOfWeek(user.getId(), dayOfWeek)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MISSION_NOT_FOUND));
 
         return MissionRes.builder()
