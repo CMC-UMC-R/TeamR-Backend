@@ -1,6 +1,7 @@
 package com.teamr.domain.mission.entity;
 
 
+import com.teamr.domain.mission.enums.DayOfWeek;
 import com.teamr.domain.mission.enums.MissionCategory;
 import com.teamr.domain.mission.enums.MissionType;
 import com.teamr.global.common.BaseEntity;
@@ -8,7 +9,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 
 @Entity
@@ -24,7 +25,8 @@ public class Mission extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    private LocalDateTime time;
+    @Column(nullable = false)
+    private LocalTime time;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -33,6 +35,14 @@ public class Mission extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MissionCategory missionCategory;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DayOfWeek dayOfWeek;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mission_id", nullable = false)
+    private Mission mission;
 
 
 }
