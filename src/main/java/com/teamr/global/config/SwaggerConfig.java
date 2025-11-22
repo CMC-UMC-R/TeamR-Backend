@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,13 +14,16 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${app.server-url}")
+    private String serverUrl;
+
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(apiInfo())
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("로컬 개발 서버"),
-                        new Server().url("https://api.teamr.com").description("프로덕션 서버")
+                        new Server().url(serverUrl).description("프로덕션 서버")
                 ))
                 .components(new Components());
     }

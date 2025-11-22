@@ -25,3 +25,5 @@ jobs:
 
       - name: Build without tests
         run: ./gradlew build -x test --no-daemon
+        env:
+          GRADLE_OPTS: "-Dgradle.wrapper.networkTimeout=180000"
