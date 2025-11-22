@@ -2,6 +2,7 @@ package com.teamr.domain.mission.controller;
 
 import com.teamr.domain.mission.dto.MissionRequest;
 import com.teamr.domain.mission.dto.MissionResponse;
+import com.teamr.domain.mission.dto.response.DailyMissionResponse;
 import com.teamr.domain.mission.dto.response.MissionRes;
 import com.teamr.domain.mission.enums.DayOfWeek;
 import com.teamr.domain.mission.service.MissionService;
@@ -23,8 +24,14 @@ public class MissionController implements MissionSwagger {
     }
 
     @Override
-    public ResponseEntity<MissionRes> getMissionByDay(Long userId, DayOfWeek dayOfWeek) {
-        MissionRes response = missionService.getMissionByDay(userId, dayOfWeek);
+    public ResponseEntity<MissionRes> getMissionByDay(String deviceId, DayOfWeek dayOfWeek) {
+        MissionRes response = missionService.getMissionByDay(deviceId, dayOfWeek);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<DailyMissionResponse> getDailyMissions(String deviceId, DayOfWeek dayOfWeek) {
+        DailyMissionResponse response = missionService.getDailyMissions(deviceId, dayOfWeek);
         return ResponseEntity.ok(response);
     }
 
