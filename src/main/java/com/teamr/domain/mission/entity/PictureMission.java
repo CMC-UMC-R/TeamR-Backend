@@ -2,14 +2,14 @@ package com.teamr.domain.mission.entity;
 
 import com.teamr.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "picture_missions")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PictureMission extends BaseEntity {
 
     @Id
@@ -22,5 +22,6 @@ public class PictureMission extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
+
 
 }
