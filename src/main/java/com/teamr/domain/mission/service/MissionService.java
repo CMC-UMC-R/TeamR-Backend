@@ -2,24 +2,35 @@ package com.teamr.domain.mission.service;
 
 import com.teamr.domain.mission.dto.MissionRequest;
 import com.teamr.domain.mission.dto.MissionResponse;
+import com.teamr.domain.mission.dto.response.DailyMissionStatus;
 import com.teamr.domain.mission.dto.response.MissionRes;
+import com.teamr.domain.mission.dto.response.WeeklyMissionStatusResponse;
 import com.teamr.domain.mission.entity.Mission;
 import com.teamr.domain.mission.entity.MovementMission;
 import com.teamr.domain.mission.entity.PictureMission;
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.mission.enums.MissionType;
+import com.teamr.domain.mission.exception.MissionAlreadyExistsException;
 import com.teamr.domain.mission.exception.MissionInvalidTypeException;
+import com.teamr.domain.mission.exception.MissionNotFoundException;
 import com.teamr.domain.mission.repository.MissionRepository;
 import com.teamr.domain.mission.repository.MovementMissionRepository;
 import com.teamr.domain.mission.repository.PictureMissionRepository;
+import com.teamr.domain.missionlog.entity.MissionLog;
+import com.teamr.domain.missionlog.service.MissionLogService;
 import com.teamr.domain.user.entity.User;
-import com.teamr.domain.user.repository.UserRepository;
-import com.teamr.global.exception.BusinessException;
-import com.teamr.global.exception.ErrorCode;
+import com.teamr.domain.user.service.UserService;
+import java.time.DayOfWeek;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +40,8 @@ public class MissionService {
     private final MissionRepository missionRepository;
     private final PictureMissionRepository pictureMissionRepository;
     private final MovementMissionRepository movementMissionRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final MissionLogService missionLogService;
 
     /**
      * 미션 생성 - 타입에 따라 PictureMission 또는 MovementMission 생성
@@ -57,18 +69,17 @@ public class MissionService {
         throw new MissionInvalidTypeException();
     }
 
-    private void validateMissionNotExists(Long userId, DayOfWeek dayOfWeek) {
+    private void validateMissionNotExists(Long userId, DayOfWeekType dayOfWeek) {
         missionRepository.findByUserIdAndDayOfWeek(userId, dayOfWeek)
                 .ifPresent(mission -> {
                     log.error("[MissionService] Mission already exists - UserId: {}, DayOfWeek: {}", userId, dayOfWeek);
-                    throw new BusinessException(ErrorCode.MISSION_ALREADY_EXISTS);
+                    throw new MissionAlreadyExistsException();
                 });
     }
 
     private Mission createAndSaveMission(MissionRequest request) {
         // User 조회
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User user = userService.findById(request.getUserId());
 
         // Mission 생성
         Mission mission = Mission.of(
@@ -105,9 +116,12 @@ public class MissionService {
     }
     // 요일별 미션 시간, 종류, 카테고리 조회
     @Transactional(readOnly = true)
-    public MissionRes getMissionByDay(Long userId, DayOfWeek dayOfWeek) {
+    public MissionRes getMissionByDay(Long userId, DayOfWeekType dayOfWeek) {
         Mission mission = missionRepository.findByUserIdAndDayOfWeek(userId, dayOfWeek)
-                .orElseThrow(() -> new BusinessException(ErrorCode.MISSION_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.error("[MissionService] Mission not found - UserId: {}, DayOfWeek: {}", userId, dayOfWeek);
+                    return new MissionNotFoundException();
+                });
 
         return MissionRes.builder()
                 .dayOfWeek(mission.getDayOfWeek())
@@ -116,7 +130,99 @@ public class MissionService {
                 .build();
     }
 
+    /**
+     * 이번 주 미션 달성 현황 조회
+     * deviceId로 사용자를 식별하고, 이번 주(일요일~토요일) 미션 완료 현황을 반환
+     * 각 날짜당 3개의 미션이 모두 완료되면 true, 아니면 false, 미래 날짜는 null
+     */
+    @Transactional(readOnly = true)
+    public WeeklyMissionStatusResponse getWeeklyMissionStatus(String deviceId) {
+        log.info("[MissionService] Fetching weekly mission status for deviceId: {}", deviceId);
 
+        // 1. deviceId로 User 조회
+        User user = userService.findByDeviceId(deviceId);
+
+        // 2. 이번 주의 시작일(일요일)과 종료일(토요일) 계산
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
+
+        log.info("[MissionService] Week range: {} to {}", startOfWeek, endOfWeek);
+
+        // 3. 이번 주 날짜 범위의 MissionLog 조회 및 그룹핑
+        Map<LocalDate, List<MissionLog>> logsByDate = missionLogService.findAndGroupByDateRange(
+                user.getId(), startOfWeek, endOfWeek
+        );
+
+        // 4. 일요일부터 토요일까지 순회하며 DailyMissionStatus 생성
+        List<DailyMissionStatus> dailyStatuses = buildDailyStatuses(startOfWeek, endOfWeek, today, logsByDate);
+
+        log.info("[MissionService] Weekly mission status retrieved successfully for user: {}", user.getId());
+
+        return WeeklyMissionStatusResponse.builder()
+                .dailyStatuses(dailyStatuses)
+                .build();
+    }
+
+    /**
+     * 주간 일별 미션 상태 리스트 생성
+     */
+    private List<DailyMissionStatus> buildDailyStatuses(
+            LocalDate startOfWeek,
+            LocalDate endOfWeek,
+            LocalDate today,
+            Map<LocalDate, List<MissionLog>> logsByDate
+    ) {
+        List<DailyMissionStatus> dailyStatuses = new ArrayList<>();
+        LocalDate currentDate = startOfWeek;
+
+        while (!currentDate.isAfter(endOfWeek)) {
+            DayOfWeekType dayOfWeek = convertJavaDayOfWeekToCustom(currentDate.getDayOfWeek());
+            Boolean isCompleted = calculateDailyCompletionStatus(currentDate, today, logsByDate);
+
+            dailyStatuses.add(DailyMissionStatus.builder()
+                    .dayOfWeek(dayOfWeek)
+                    .date(currentDate)
+                    .isCompleted(isCompleted)
+                    .build());
+
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return dailyStatuses;
+    }
+
+    /**
+     * 특정 날짜의 미션 완료 여부 계산
+     * - 미래 날짜: null
+     * - 과거/오늘: 로그가 3개 이상이면 true, 아니면 false
+     */
+    private Boolean calculateDailyCompletionStatus(
+            LocalDate targetDate,
+            LocalDate today,
+            Map<LocalDate, List<MissionLog>> logsByDate
+    ) {
+        if (targetDate.isAfter(today)) {
+            return null;
+        }
+
+        return missionLogService.isCompletedForDate(targetDate, logsByDate);
+    }
+
+    /**
+     * java.time.DayOfWeek를 커스텀 DayOfWeek enum으로 변환
+     */
+    private DayOfWeekType convertJavaDayOfWeekToCustom(DayOfWeek javaDayOfWeek) {
+        return switch (javaDayOfWeek) {
+            case MONDAY -> DayOfWeekType.MONDAY;
+            case TUESDAY -> DayOfWeekType.TUESDAY;
+            case WEDNESDAY -> DayOfWeekType.WEDNESDAY;
+            case THURSDAY -> DayOfWeekType.THURSDAY;
+            case FRIDAY -> DayOfWeekType.FRIDAY;
+            case SATURDAY -> DayOfWeekType.SATURDAY;
+            case SUNDAY -> DayOfWeekType.SUNDAY;
+        };
+    }
 }
 
 

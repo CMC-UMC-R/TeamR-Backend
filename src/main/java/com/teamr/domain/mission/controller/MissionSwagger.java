@@ -3,7 +3,8 @@ package com.teamr.domain.mission.controller;
 import com.teamr.domain.mission.dto.MissionRequest;
 import com.teamr.domain.mission.dto.MissionResponse;
 import com.teamr.domain.mission.dto.response.MissionRes;
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.dto.response.WeeklyMissionStatusResponse;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,10 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Mission", description = "미션 관련 API")
 public interface MissionSwagger {
@@ -77,6 +75,43 @@ public interface MissionSwagger {
             @Parameter(description = "사용자 ID", required = true, example = "1")
             @RequestParam Long userId,
             @Parameter(description = "요일", required = true, example = "MONDAY")
-            @RequestParam DayOfWeek dayOfWeek
+            @RequestParam DayOfWeekType dayOfWeek
+    );
+
+    /**
+     * 이번 주 미션 달성 현황 조회
+     * deviceId로 사용자를 식별하고, 이번 주(일요일~토요일) 미션 완료 현황을 반환
+     */
+    @Operation(
+            summary = "이번 주 미션 달성 현황 조회",
+            description = """
+                    이번 주(일요일~토요일)의 미션 달성 현황을 조회합니다.
+                    
+                    응답 규칙:
+                    - 각 날짜당 3개의 미션(WAKE_UP, MOVEMENT, WORK)이 모두 완료되면 isCompleted: true
+                    - 일부만 완료되거나 미완료면 isCompleted: false
+                    - 아직 오지 않은 미래 날짜는 isCompleted: null
+                    
+                    주 단위 계산:
+                    - 일요일을 주의 시작으로, 토요일을 주의 끝으로 계산
+                    - 오늘이 수요일이면 지난 일요일부터 다음 토요일까지가 이번 주
+                    
+                    인증:
+                    - deviceId를 헤더로 전달하여 사용자 식별
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "주간 미션 현황 조회 성공",
+                    content = @Content(schema = @Schema(implementation = WeeklyMissionStatusResponse.class))
+            ),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+    })
+    @GetMapping("/weekly-status")
+    ResponseEntity<WeeklyMissionStatusResponse> getWeeklyMissionStatus(
+            @Parameter(description = "기기 고유 ID", required = true, example = "device-12345")
+            @RequestHeader("X-Device-Id") String deviceId
     );
 }
