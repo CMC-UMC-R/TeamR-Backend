@@ -35,5 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+.cursorrules
 
 .env.local
+.env
