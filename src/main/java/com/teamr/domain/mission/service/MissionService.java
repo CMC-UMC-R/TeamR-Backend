@@ -144,7 +144,7 @@ public class MissionService {
         List<Mission> savedMissions = missionRepository.findAllByUserAndDayOfWeek(user, dayOfWeek);
         log.info("[MissionService] Found {} saved missions", savedMissions.size());
 
-        // UI에 보여줄 3가지 카테고리 정의 (순서 중요)
+        // UI에 보여줄 3가지 카테고리 정의
         List<MissionCategory> targetCategories = List.of(
                 MissionCategory.WAKE_UP,
                 MissionCategory.MOVEMENT,
