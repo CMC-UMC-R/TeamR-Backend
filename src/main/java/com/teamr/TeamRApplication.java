@@ -1,4 +1,4 @@
-package teamr;
+package com.teamr;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
