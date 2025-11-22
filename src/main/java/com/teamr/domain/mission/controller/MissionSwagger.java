@@ -25,7 +25,7 @@ public interface MissionSwagger {
     /**
      * 미션 생성 (PICTURE 또는 MOVEMENT 타입)
      * 미션 타입에 따라 PictureMission 또는 MovementMission을 생성합니다.
-     * 이미 존재하는 미션(같은 userId, dayOfWeek)이면 BadRequest 발생
+     * 이미 존재하는 미션(같은 deviceId, dayOfWeek)이면 BadRequest 발생
      */
     @Operation(
             summary = "미션 생성",
@@ -43,6 +43,9 @@ public interface MissionSwagger {
                     - 동일한 사용자의 동일한 요일에 이미 미션이 존재하면 400 에러 발생
                     - 미션 수정(update)은 지원하지 않습니다
                     - Gemini API는 별도로 호출하여 word를 생성한 후 이 API를 호출해야 합니다
+                    
+                    인증:
+                    - deviceId를 헤더로 전달하여 사용자 식별
                     """
     )
     @ApiResponses({
@@ -52,10 +55,19 @@ public interface MissionSwagger {
                     content = @Content(schema = @Schema(implementation = MissionResponse.class))
             ),
             @ApiResponse(responseCode = "400", description = "잘못된 입력값 또는 이미 존재하는 미션"),
+            @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
     })
     @PostMapping
-    ResponseEntity<MissionResponse> createMission(@RequestBody MissionRequest request);
+    ResponseEntity<MissionResponse> createMission(
+            @Parameter(
+                    description = "기기 고유 식별자 (UUID)",
+                    required = true,
+                    example = "550e8400-e29b-41d4-a716-446655440000"
+            )
+            @RequestHeader("X-Device-Id") String deviceId,
+            @RequestBody MissionRequest request
+    );
 
     /**
      * 요일별 미션 조회

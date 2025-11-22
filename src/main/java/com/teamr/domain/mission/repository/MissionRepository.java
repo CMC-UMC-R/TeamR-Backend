@@ -21,5 +21,9 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
             "WHERE m.user = :user AND m.dayOfWeek = :dayOfWeek")
     List<Mission> findAllByUserAndDayOfWeek(@Param("user") User user, @Param("dayOfWeek") DayOfWeekType dayOfWeek);
 
+    @Query("SELECT m FROM Mission m " +
+            "WHERE m.user.deviceId = :deviceId AND m.dayOfWeek = :dayOfWeek")
+    List<Mission> findByUser_DeviceIdAndDayOfWeek(@Param("deviceId") String deviceId, @Param("dayOfWeek") DayOfWeekType dayOfWeek);
+
     Optional<Mission> findByUser_DeviceIdAndMissionCategory(String deviceId, MissionCategory missionCategory);
 }
