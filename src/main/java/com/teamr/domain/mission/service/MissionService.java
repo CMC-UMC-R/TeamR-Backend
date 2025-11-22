@@ -180,25 +180,55 @@ public class MissionService {
 
     /**
      * 존재하는 미션을 DTO로 변환
+     * MissionType에 따라 MovementMission 또는 PictureMission 정보를 함께 반환
      */
     private DailyMissionDto toDto(Mission mission) {
+        // PICTURE 타입: word만 채움
+        if (mission.getMissionType() == MissionType.PICTURE && mission.getPictureMission() != null) {
+            return DailyMissionDto.builder()
+                    .category(mission.getMissionCategory())
+                    .categoryTitle(getKoreanTitle(mission.getMissionCategory()))
+                    .missionType(mission.getMissionType())
+                    .time(mission.getTime())
+                    .word(mission.getPictureMission().getWord())
+                    .count(null)
+                    .build();
+        }
+        
+        // MOVEMENT 타입: count만 채움
+        if (mission.getMissionType() == MissionType.MOVEMENT && mission.getMovementMission() != null) {
+            return DailyMissionDto.builder()
+                    .category(mission.getMissionCategory())
+                    .categoryTitle(getKoreanTitle(mission.getMissionCategory()))
+                    .missionType(mission.getMissionType())
+                    .time(mission.getTime())
+                    .word(null)
+                    .count(mission.getMovementMission().getCount())
+                    .build();
+        }
+
+        // 기본값 (타입이 없거나 데이터가 없을 경우)
         return DailyMissionDto.builder()
                 .category(mission.getMissionCategory())
                 .categoryTitle(getKoreanTitle(mission.getMissionCategory()))
+                .missionType(mission.getMissionType())
                 .time(mission.getTime())
-                .isSet(true) // DB에 있으면 설정된 것
+                .word(null)
+                .count(null)
                 .build();
     }
 
     /**
-     * DB에 없을 때 보여줄 빈 껍데기 (00:00, isSet: false)
+     * DB에 없을 때 보여줄 빈 껍데기
      */
     private DailyMissionDto createEmptyDto(MissionCategory category) {
         return DailyMissionDto.builder()
                 .category(category)
                 .categoryTitle(getKoreanTitle(category))
-                .time(LocalTime.of(0, 0)) // 00:00
-                .isSet(false) // 설정 안 됨
+                .missionType(null)
+                .time(LocalTime.of(0, 0))
+                .word(null)
+                .count(null)
                 .build();
     }
 
