@@ -1,6 +1,6 @@
 package com.teamr.domain.mission.dto.response;
 
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.mission.enums.MissionType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.time.LocalTime;
 public class MissionRes {
 
     @Schema(description = "요일", example = "MONDAY")
-    private DayOfWeek dayOfWeek;
+    private DayOfWeekType dayOfWeek;
     
     @Schema(description = "미션 시간", example = "07:00:00")
     private LocalTime time;

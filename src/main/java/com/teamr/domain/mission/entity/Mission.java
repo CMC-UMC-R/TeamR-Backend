@@ -1,7 +1,7 @@
 package com.teamr.domain.mission.entity;
 
 
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.mission.enums.MissionCategory;
 import com.teamr.domain.mission.enums.MissionType;
 import com.teamr.domain.user.entity.User;
@@ -43,7 +43,7 @@ public class Mission extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DayOfWeek dayOfWeek;
+    private DayOfWeekType dayOfWeek;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -62,7 +62,7 @@ public class Mission extends BaseEntity {
         this.time = time;
     }
 
-    private Mission(User user, LocalTime time, MissionType missionType, MissionCategory missionCategory, DayOfWeek dayOfWeek) {
+    private Mission(User user, LocalTime time, MissionType missionType, MissionCategory missionCategory, DayOfWeekType dayOfWeek) {
         this.user = user;
         this.time = time;
         this.missionType = missionType;
@@ -70,7 +70,7 @@ public class Mission extends BaseEntity {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public static Mission of(User user, LocalTime time, MissionType missionType, MissionCategory missionCategory, DayOfWeek dayOfWeek) {
+    public static Mission of(User user, LocalTime time, MissionType missionType, MissionCategory missionCategory, DayOfWeekType dayOfWeek) {
         return new Mission(user, time, missionType, missionCategory, dayOfWeek);
     }
 }
