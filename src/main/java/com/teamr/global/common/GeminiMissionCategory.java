@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 @Schema(description = "미션 카테고리")
-public enum MissionCategory {
+public enum GeminiMissionCategory {
     // 기상 미션 카테고리
     BEDROOM(MissionType.WAKEUP, "침실", "침대, 침구, 침실 풍경"),
     LIVING_ROOM(MissionType.WAKEUP, "거실", "소파, 거실 풍경, TV"),

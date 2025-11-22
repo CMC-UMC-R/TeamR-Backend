@@ -1,6 +1,6 @@
 package com.teamr.infra.gemini.controller;
 
-import com.teamr.global.common.MissionCategory;
+import com.teamr.global.common.GeminiMissionCategory;
 import com.teamr.infra.gemini.dto.MissionVerificationResponse;
 import com.teamr.infra.gemini.dto.WordGenerationResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,7 +45,7 @@ public interface GeminiSwagger {
                             "STUDY_ROOM, BEVERAGE, COMPUTER, WRITING_TOOLS, BOOK_NOTE)",
                     required = true
             )
-            @RequestParam MissionCategory category);
+            @RequestParam GeminiMissionCategory category);
 
     /**
      * 다른 미션 단어 생성
@@ -69,7 +69,7 @@ public interface GeminiSwagger {
                     description = "미션 카테고리",
                     required = true
             )
-            @RequestParam MissionCategory category,
+            @RequestParam GeminiMissionCategory category,
             @Parameter(
                     description = "이미 생성된 단어 목록 (중복 방지)",
                     required = true,
