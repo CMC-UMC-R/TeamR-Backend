@@ -3,6 +3,7 @@ package com.teamr.domain.mission.dto;
 import com.teamr.domain.mission.enums.DayOfWeek;
 import com.teamr.domain.mission.enums.MissionCategory;
 import com.teamr.domain.mission.enums.MissionType;
+import com.teamr.global.common.GeminiMissionCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,17 @@ public class MissionRequest {
     @Schema(description = "미션 시간", example = "07:00:00")
     private final LocalTime time;
     
-    @Schema(description = "미션 카테고리 (WAKE_UP, MOVEMENT, WORK)")
+    @Schema(description = "미션 카테고리 (WAKE_UP, MOVEMENT, WORK)", example = "WAKE_UP")
     private final MissionCategory missionCategory;
+    
+    @Schema(description = """
+            Gemini 세부 카테고리 (missionCategory와 일치해야 함)
+            - WAKE_UP: BEDROOM, LIVING_ROOM, BATHROOM, KITCHEN, DRESSING_ROOM
+            - MOVEMENT: MART_CONVENIENCE, BUILDING, STREET_TREE, ROAD
+            - WORK: STUDY_ROOM, BEVERAGE, COMPUTER, WRITING_TOOLS, BOOK_NOTE
+            """, 
+            example = "BEDROOM")
+    private final GeminiMissionCategory geminiCategory;
     
     @Schema(description = "미션 타입 (PICTURE, MOVEMENT)")
     private final MissionType missionType;
@@ -40,11 +50,12 @@ public class MissionRequest {
             Long userId,
             LocalTime time,
             MissionCategory missionCategory,
+            GeminiMissionCategory geminiCategory,
             MissionType missionType,
             DayOfWeek dayOfWeek,
             String word,
             Integer count) {
-        return new MissionRequest(userId, time, missionCategory, missionType, dayOfWeek, word, count);
+        return new MissionRequest(userId, time, missionCategory, geminiCategory, missionType, dayOfWeek, word, count);
     }
 }
 

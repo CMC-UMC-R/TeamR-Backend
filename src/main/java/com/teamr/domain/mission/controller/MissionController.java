@@ -22,10 +22,8 @@ public class MissionController implements MissionSwagger {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{dayOfWeek}")
-    public ResponseEntity<MissionRes> getMissionByDay(
-            @RequestParam Long userId,
-            @RequestParam DayOfWeek dayOfWeek) {
+    @Override
+    public ResponseEntity<MissionRes> getMissionByDay(Long userId, DayOfWeek dayOfWeek) {
         MissionRes response = missionService.getMissionByDay(userId, dayOfWeek);
         return ResponseEntity.ok(response);
     }

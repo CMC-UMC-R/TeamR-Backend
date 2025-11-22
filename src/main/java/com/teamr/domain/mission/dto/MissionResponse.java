@@ -1,6 +1,5 @@
 package com.teamr.domain.mission.dto;
 
-import com.teamr.domain.mission.entity.Mission;
 import com.teamr.domain.mission.entity.MovementMission;
 import com.teamr.domain.mission.entity.PictureMission;
 import com.teamr.domain.mission.enums.MissionType;
