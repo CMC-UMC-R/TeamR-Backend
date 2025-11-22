@@ -22,8 +22,13 @@ public class MovementMission extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     private Mission mission;
-    public void updateCount(Integer count) {
+
+    private MovementMission(Integer count, Mission mission) {
         this.count = count;
+        this.mission = mission;
     }
 
+    public static MovementMission of(Integer count, Mission mission) {
+        return new MovementMission(count, mission);
+    }
 }

@@ -1,12 +1,12 @@
 package com.teamr.infra.gemini.prompt;
 
-import com.teamr.global.common.MissionCategory;
+import com.teamr.global.common.GeminiMissionCategory;
 
 import java.util.List;
 
 public class GeminiPromptTemplate {
 
-    public static String createWordGenerationPrompt(MissionCategory category) {
+    public static String createWordGenerationPrompt(GeminiMissionCategory category) {
         return String.format("""
                 당신은 미션 인증 단어를 생성하는 AI입니다.
                 
@@ -37,7 +37,7 @@ public class GeminiPromptTemplate {
     }
 
     public static String createDifferentWordPrompt(
-            MissionCategory category,
+            GeminiMissionCategory category,
             List<String> existingWords) {
         return String.format("""
                 당신은 미션 인증 단어를 생성하는 AI입니다.

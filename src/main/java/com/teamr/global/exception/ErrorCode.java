@@ -19,12 +19,12 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "U001", "사용자를 찾을 수 없습니다"),
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "U002", "이미 존재하는 사용자입니다"),
 
-    //Mission (M001~)
+    // Mission (M001~)
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "미션을 찾을 수 없습니다"),
+    MISSION_INVALID_TYPE(HttpStatus.BAD_REQUEST, "M002", "유효하지 않은 미션 타입입니다"),
+    MISSION_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "M003", "해당 요일에 이미 미션이 존재합니다"),
+    MISSION_CATEGORY_MISMATCH(HttpStatus.BAD_REQUEST, "M004", "미션 카테고리와 Gemini 카테고리가 일치하지 않습니다"),
 
-
-    
-    
     // AI/External API (E001~)
     AI_API_CALL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "AI API 호출에 실패했습니다"),
     AI_RESPONSE_PARSE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E002", "AI 응답 파싱에 실패했습니다"),
