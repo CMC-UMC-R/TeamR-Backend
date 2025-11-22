@@ -15,8 +15,8 @@ import java.time.LocalTime;
 @Schema(description = "미션 생성 요청")
 public class MissionRequest {
     
-    @Schema(description = "미션 제목", example = "아침 조깅하기")
-    private final String title;
+    @Schema(description = "사용자 ID", example = "1")
+    private final Long userId;
     
     @Schema(description = "미션 시간", example = "07:00:00")
     private final LocalTime time;
@@ -37,14 +37,14 @@ public class MissionRequest {
     private final Integer count;
 
     public static MissionRequest of(
-            String title,
+            Long userId,
             LocalTime time,
             MissionCategory missionCategory,
             MissionType missionType,
             DayOfWeek dayOfWeek,
             String word,
             Integer count) {
-        return new MissionRequest(title, time, missionCategory, missionType, dayOfWeek, word, count);
+        return new MissionRequest(userId, time, missionCategory, missionType, dayOfWeek, word, count);
     }
 }
 
