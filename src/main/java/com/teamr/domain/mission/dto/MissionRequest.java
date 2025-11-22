@@ -1,6 +1,6 @@
 package com.teamr.domain.mission.dto;
 
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.mission.enums.MissionCategory;
 import com.teamr.domain.mission.enums.MissionType;
 import com.teamr.global.common.GeminiMissionCategory;
@@ -38,7 +38,7 @@ public class MissionRequest {
     private final MissionType missionType;
     
     @Schema(description = "요일")
-    private final DayOfWeek dayOfWeek;
+    private final DayOfWeekType dayOfWeek;
     
     @Schema(description = "Gemini로 생성된 단어 (PICTURE 타입일 경우)", example = "아침 조깅", nullable = true)
     private final String word;
@@ -52,7 +52,7 @@ public class MissionRequest {
             MissionCategory missionCategory,
             GeminiMissionCategory geminiCategory,
             MissionType missionType,
-            DayOfWeek dayOfWeek,
+            DayOfWeekType dayOfWeek,
             String word,
             Integer count) {
         return new MissionRequest(userId, time, missionCategory, geminiCategory, missionType, dayOfWeek, word, count);

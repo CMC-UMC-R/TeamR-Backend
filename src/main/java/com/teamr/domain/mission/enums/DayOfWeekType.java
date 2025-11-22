@@ -1,6 +1,6 @@
 package com.teamr.domain.mission.enums;
 
-public enum DayOfWeek {
+public enum DayOfWeekType {
     MONDAY,
     TUESDAY,
     WEDNESDAY,

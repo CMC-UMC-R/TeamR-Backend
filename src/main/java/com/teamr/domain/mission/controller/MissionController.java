@@ -4,7 +4,8 @@ import com.teamr.domain.mission.dto.MissionRequest;
 import com.teamr.domain.mission.dto.MissionResponse;
 import com.teamr.domain.mission.dto.response.DailyMissionResponse;
 import com.teamr.domain.mission.dto.response.MissionRes;
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
+import com.teamr.domain.mission.dto.response.WeeklyMissionStatusResponse;
 import com.teamr.domain.mission.service.MissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,22 @@ public class MissionController implements MissionSwagger {
     }
 
     @Override
-    public ResponseEntity<MissionRes> getMissionByDay(String deviceId, DayOfWeek dayOfWeek) {
+    public ResponseEntity<MissionRes> getMissionByDay(String deviceId, DayOfWeekType dayOfWeek) {
         MissionRes response = missionService.getMissionByDay(deviceId, dayOfWeek);
         return ResponseEntity.ok(response);
     }
 
     @Override
-    public ResponseEntity<DailyMissionResponse> getDailyMissions(String deviceId, DayOfWeek dayOfWeek) {
+    public ResponseEntity<DailyMissionResponse> getDailyMissions(String deviceId, DayOfWeekType dayOfWeek) {
         DailyMissionResponse response = missionService.getDailyMissions(deviceId, dayOfWeek);
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<WeeklyMissionStatusResponse> getWeeklyMissionStatus(
+            @RequestHeader("X-Device-Id") String deviceId
+    ) {
+        WeeklyMissionStatusResponse response = missionService.getWeeklyMissionStatus(deviceId);
         return ResponseEntity.ok(response);
     }
 

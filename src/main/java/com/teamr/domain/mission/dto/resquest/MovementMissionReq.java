@@ -1,6 +1,6 @@
 package com.teamr.domain.mission.dto.resquest;
 
-import com.teamr.domain.mission.enums.DayOfWeek;
+import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.mission.enums.MissionCategory;
 import com.teamr.domain.mission.enums.MissionType;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +16,7 @@ import java.time.LocalTime;
 public class MovementMissionReq {
 
     @NotNull
-    private DayOfWeek dayOfWeek;
+    private DayOfWeekType dayOfWeek;
     @NotNull
     private MissionType missionType;
     @NotNull
