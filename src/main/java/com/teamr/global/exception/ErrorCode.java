@@ -23,7 +23,12 @@ public enum ErrorCode {
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "미션을 찾을 수 없습니다"),
 
 
-    ;
+    
+    
+    // AI/External API (E001~)
+    AI_API_CALL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "AI API 호출에 실패했습니다"),
+    AI_RESPONSE_PARSE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E002", "AI 응답 파싱에 실패했습니다"),
+    AI_TIMEOUT(HttpStatus.REQUEST_TIMEOUT, "E003", "AI API 응답 시간이 초과되었습니다");
 
     private final HttpStatus status;
     private final String code;
