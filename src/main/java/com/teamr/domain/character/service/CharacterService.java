@@ -5,7 +5,6 @@ import com.teamr.domain.character.entity.Character;
 import com.teamr.domain.character.entity.CharacterLevel;
 import com.teamr.domain.character.repository.CharacterRepository;
 import com.teamr.domain.user.entity.User;
-import com.teamr.domain.user.exception.UserNotFoundException;
 import com.teamr.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,19 +41,5 @@ public class CharacterService {
                 .count(character.getCount())
                 .imageUrl(fullImageUrl)
                 .build();
-    }
-
-    /**
-     * 미션 달성 시 카운트 증가
-     */
-    @Transactional
-    public void increaseCharacterCount(String deviceId) {
-        User user = userRepository.findByDeviceId(deviceId)
-                .orElseThrow(UserNotFoundException::new);
-
-        Character character = characterRepository.findByUser(user)
-                .orElseGet(() -> characterRepository.save(new Character(user)));
-
-        character.incrementCount();
     }
 }
