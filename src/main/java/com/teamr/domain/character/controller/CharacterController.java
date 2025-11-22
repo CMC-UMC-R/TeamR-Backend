@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/characters")
 @RequiredArgsConstructor
-public class CharacterController {
+public class CharacterController implements CharacterSwagger {
 
     private final CharacterService characterService;
 
