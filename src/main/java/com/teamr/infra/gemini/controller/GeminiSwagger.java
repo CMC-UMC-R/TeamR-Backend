@@ -26,7 +26,7 @@ public interface GeminiSwagger {
      * 카테고리에 맞는 대표적인 미션 단어를 AI가 생성합니다.
      */
     @Operation(
-            summary = "미션 단어 생성",
+            summary = "미션 단어 생성 Test API",
             description = "선택한 카테고리에서 촬영 가능한 대표적인 미션 단어를 AI가 생성합니다."
     )
     @ApiResponses({
@@ -52,7 +52,7 @@ public interface GeminiSwagger {
      * 이미 생성된 단어들과 다른 새로운 미션 단어를 AI가 생성합니다.
      */
     @Operation(
-            summary = "다른 미션 단어 재생성",
+            summary = "다른 미션 단어 재생성 Test API",
             description = "이미 생성된 단어들과 다른 새로운 미션 단어를 AI가 생성합니다. 마음에 들지 않을 때 사용하세요."
     )
     @ApiResponses({
@@ -82,7 +82,7 @@ public interface GeminiSwagger {
      * 사용자가 선택한 단어와 제출한 사진이 일치하는지 AI가 검증합니다.
      */
     @Operation(
-            summary = "미션 인증 검증",
+            summary = "미션 인증 검증 Test API",
             description = "사용자가 선택한 단어와 제출한 사진이 일치하는지 AI가 검증합니다."
     )
     @ApiResponses({
