@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController implements UserSwagger {
-
+    
     private final UserService userService;
 
     @Override

@@ -57,8 +57,8 @@ public class MissionService {
         // 1. deviceId로 User 조회
         User user = userService.findByDeviceId(deviceId);
 
-        // 2. 이미 존재하는 미션인지 확인 (update 불가)
-        validateMissionNotExists(user.getId(), request.getDayOfWeek());
+        // 2. 이미 존재하는 미션인지 확인 (같은 요일, 같은 카테고리면 중복)
+        validateMissionNotExists(user.getId(), request.getDayOfWeek(), request.getMissionCategory());
 
         // 3. Mission 엔티티 생성 및 저장
         Mission savedMission = createAndSaveMission(user, request);
@@ -74,10 +74,15 @@ public class MissionService {
         throw new MissionInvalidTypeException();
     }
 
-    private void validateMissionNotExists(Long userId, DayOfWeekType dayOfWeek) {
-        missionRepository.findByUserIdAndDayOfWeek(userId, dayOfWeek)
+    /**
+     * 같은 요일, 같은 카테고리의 미션이 이미 존재하는지 확인
+     * 카테고리별로 1개씩만 생성 가능
+     */
+    private void validateMissionNotExists(Long userId, DayOfWeekType dayOfWeek, MissionCategory missionCategory) {
+        missionRepository.findByUserIdAndDayOfWeekAndMissionCategory(userId, dayOfWeek, missionCategory)
                 .ifPresent(mission -> {
-                    log.error("[MissionService] Mission already exists - UserId: {}, DayOfWeek: {}", userId, dayOfWeek);
+                    log.error("[MissionService] Mission already exists - UserId: {}, DayOfWeek: {}, Category: {}", 
+                            userId, dayOfWeek, missionCategory);
                     throw new MissionAlreadyExistsException();
                 });
     }
