@@ -1,11 +1,41 @@
 version: '3.8'
 
 services:
+
+  postgres:
+    image: postgres:15
+    container_name: local-postgres
+    restart: always
+    env_file:
+      - .env.local
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   teamr-app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env.local
     restart: unless-stopped
     container_name: teamr-app
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:
+    driver: bridge
