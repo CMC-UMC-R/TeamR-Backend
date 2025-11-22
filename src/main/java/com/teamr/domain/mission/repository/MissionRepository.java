@@ -15,6 +15,12 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
 
     Optional<Mission> findByUserIdAndDayOfWeek(Long userId, DayOfWeekType dayOfWeek);
 
+    Optional<Mission> findByUserIdAndDayOfWeekAndMissionCategory(
+            Long userId, 
+            DayOfWeekType dayOfWeek, 
+            MissionCategory missionCategory
+    );
+
     @Query("SELECT m FROM Mission m " +
             "LEFT JOIN FETCH m.pictureMission " +
             "LEFT JOIN FETCH m.movementMission " +
