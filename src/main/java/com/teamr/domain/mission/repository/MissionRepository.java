@@ -3,6 +3,7 @@ package com.teamr.domain.mission.repository;
 import com.teamr.domain.mission.entity.Mission;
 import com.teamr.domain.mission.enums.DayOfWeekType;
 import com.teamr.domain.user.entity.User;
+import com.teamr.domain.mission.enums.MissionCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
 
     List<Mission> findAllByUserAndDayOfWeek(User user, DayOfWeekType dayOfWeek);
 
+    Optional<Mission> findByUser_DeviceIdAndMissionCategory(String deviceId, MissionCategory missionCategory);
 }

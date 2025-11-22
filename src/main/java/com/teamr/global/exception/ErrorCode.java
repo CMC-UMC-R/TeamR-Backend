@@ -25,6 +25,9 @@ public enum ErrorCode {
     MISSION_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "M003", "해당 요일에 이미 미션이 존재합니다"),
     MISSION_CATEGORY_MISMATCH(HttpStatus.BAD_REQUEST, "M004", "미션 카테고리와 Gemini 카테고리가 일치하지 않습니다"),
 
+    //Mission (ML001~)
+    ALREADY_COMPLETED_MISSION(HttpStatus.BAD_REQUEST,"ML001", "이미 완료환 미션입니다"),
+
     // AI/External API (E001~)
     AI_API_CALL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E001", "AI API 호출에 실패했습니다"),
     AI_RESPONSE_PARSE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "E002", "AI 응답 파싱에 실패했습니다"),

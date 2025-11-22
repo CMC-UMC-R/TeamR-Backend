@@ -4,16 +4,16 @@ import com.teamr.domain.mission.entity.Mission;
 import com.teamr.domain.missionlog.enums.MissionStatus;
 import com.teamr.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "mission_logs")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MissionLog extends BaseEntity {
 
     @Id
@@ -41,3 +41,4 @@ public class MissionLog extends BaseEntity {
         return new MissionLog(missionStatus, missionDate, mission);
     }
 }
+
