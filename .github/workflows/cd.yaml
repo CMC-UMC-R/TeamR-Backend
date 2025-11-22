@@ -18,11 +18,13 @@ jobs:
           script: |
             cd ~/TeamR-Backend
 
+            git fetch --all
+            git reset --hard origin/main
             git pull origin main
 
             echo "${{ secrets.ENV_PROD }}" > .env.prod
 
-            sudo docker-compose -f docker-compose.prod.yml down
-            sudo docker-compose -f docker-compose.prod.yml up -d --build
+            docker compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml up -d --build
 
-            sudo docker image prune -f
+            docker image prune -f
