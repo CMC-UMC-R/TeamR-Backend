@@ -16,7 +16,7 @@ jobs:
           key: ${{ secrets.GCP_SSH_KEY }}
           port: 22
           script: |
-            cd ~/TeamR-Backend
+            cd /home/medsnap.cloud/TeamR-Backend
 
             git fetch --all
             git reset --hard origin/main
