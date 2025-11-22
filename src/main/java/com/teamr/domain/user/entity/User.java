@@ -15,7 +15,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String deviceId;
 
-
-
+    public User(String deviceId) {
+        this.deviceId = deviceId;
+    }
 }
