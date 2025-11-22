@@ -19,8 +19,11 @@ public class MissionController implements MissionSwagger {
     private final MissionService missionService;
 
     @Override
-    public ResponseEntity<MissionResponse> createMission(MissionRequest request) {
-        MissionResponse response = missionService.createMission(request);
+    public ResponseEntity<MissionResponse> createMission(
+            @RequestHeader("X-Device-Id") String deviceId,
+            @RequestBody MissionRequest request
+    ) {
+        MissionResponse response = missionService.createMission(deviceId, request);
         return ResponseEntity.ok(response);
     }
 

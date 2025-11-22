@@ -50,17 +50,20 @@ public class MissionService {
      * 이미 존재하는 미션이면 BadRequest 발생
      */
     @Transactional
-    public MissionResponse createMission(MissionRequest request) {
-        log.info("[MissionService] Creating mission - UserId: {}, DayOfWeek: {}, Category: {}, Type: {}",
-                request.getUserId(), request.getDayOfWeek(), request.getMissionCategory(), request.getMissionType());
+    public MissionResponse createMission(String deviceId, MissionRequest request) {
+        log.info("[MissionService] Creating mission - DeviceId: {}, DayOfWeek: {}, Category: {}, Type: {}",
+                deviceId, request.getDayOfWeek(), request.getMissionCategory(), request.getMissionType());
 
-        // 1. 이미 존재하는 미션인지 확인 (update 불가)
-        validateMissionNotExists(request.getUserId(), request.getDayOfWeek());
+        // 1. deviceId로 User 조회
+        User user = userService.findByDeviceId(deviceId);
 
-        // 2. Mission 엔티티 생성 및 저장
-        Mission savedMission = createAndSaveMission(request);
+        // 2. 이미 존재하는 미션인지 확인 (update 불가)
+        validateMissionNotExists(user.getId(), request.getDayOfWeek());
 
-        // 3. 타입에 따라 분기 처리
+        // 3. Mission 엔티티 생성 및 저장
+        Mission savedMission = createAndSaveMission(user, request);
+
+        // 4. 타입에 따라 분기 처리
         if (request.getMissionType() == MissionType.PICTURE) {
             return createPictureMission(savedMission, request.getWord());
         } else if (request.getMissionType() == MissionType.MOVEMENT) {
@@ -79,10 +82,7 @@ public class MissionService {
                 });
     }
 
-    private Mission createAndSaveMission(MissionRequest request) {
-        // User 조회
-        User user = userService.findById(request.getUserId());
-
+    private Mission createAndSaveMission(User user, MissionRequest request) {
         // Mission 생성
         Mission mission = Mission.of(
                 user,

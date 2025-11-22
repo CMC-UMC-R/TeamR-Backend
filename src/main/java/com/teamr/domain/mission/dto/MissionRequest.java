@@ -16,9 +16,6 @@ import java.time.LocalTime;
 @Schema(description = "미션 생성 요청")
 public class MissionRequest {
     
-    @Schema(description = "사용자 ID", example = "1")
-    private final Long userId;
-    
     @Schema(description = "미션 시간", example = "07:00:00")
     private final LocalTime time;
     
@@ -47,7 +44,6 @@ public class MissionRequest {
     private final Integer count;
 
     public static MissionRequest of(
-            Long userId,
             LocalTime time,
             MissionCategory missionCategory,
             GeminiMissionCategory geminiCategory,
@@ -55,7 +51,7 @@ public class MissionRequest {
             DayOfWeekType dayOfWeek,
             String word,
             Integer count) {
-        return new MissionRequest(userId, time, missionCategory, geminiCategory, missionType, dayOfWeek, word, count);
+        return new MissionRequest(time, missionCategory, geminiCategory, missionType, dayOfWeek, word, count);
     }
 }
 
