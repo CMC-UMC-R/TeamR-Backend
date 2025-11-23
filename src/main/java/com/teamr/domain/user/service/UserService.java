@@ -20,7 +20,7 @@ public class UserService {
     /**
      * deviceId로 사용자 조회 (없으면 자동 생성)
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public User findByDeviceId(String deviceId) {
         log.info("[UserService] Finding user by deviceId: {}", deviceId);
         return userRepository.findByDeviceId(deviceId)
