@@ -124,7 +124,6 @@ public class MissionService {
         return MissionResponse.fromMovement(savedMovementMission);
     }
     // 요일별 미션 시간, 종류, 카테고리 조회
-    @Transactional(readOnly = true)
     public MissionRes getMissionByDay(String deviceId, DayOfWeekType dayOfWeek) {
         log.info("[MissionService] Getting mission by day - DeviceId: {}, DayOfWeek: {}", deviceId, dayOfWeek);
 
@@ -147,7 +146,6 @@ public class MissionService {
      * 요일별 미션 목록 조회 (3개 고정: 기상, 이동, 활동)
      * DB에 데이터가 없어도 빈 껍데기(00:00, isSet: false)를 포함하여 항상 3개 반환
      */
-    @Transactional(readOnly = true)
     public DailyMissionResponse getDailyMissions(String deviceId, DayOfWeekType dayOfWeek) {
         log.info("[MissionService] Getting daily missions - DeviceId: {}, DayOfWeek: {}", deviceId, dayOfWeek);
 
@@ -256,7 +254,6 @@ public class MissionService {
      * deviceId로 사용자를 식별하고, 이번 주(일요일~토요일) 미션 완료 현황을 반환
      * 각 날짜당 3개의 미션이 모두 완료되면 true, 아니면 false, 미래 날짜는 null
      */
-    @Transactional(readOnly = true)
     public WeeklyMissionStatusResponse getWeeklyMissionStatus(String deviceId) {
         log.info("[MissionService] Fetching weekly mission status for deviceId: {}", deviceId);
 
